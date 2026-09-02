@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+service NERService {
+    rpc Predict (NERRequest) returns (NERResponse);
+}
+
+message NERRequest {
+    string text = 1;
+}
+
+message NERResponse {
+    repeated Entity entities = 1;
+}
+
+message Entity {
+    string text = 1;
+    string label = 2;
+    int32 start = 3;
+    int32 end = 4;
+    float confidence = 5;
+}
