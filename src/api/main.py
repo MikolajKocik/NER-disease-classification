@@ -2,14 +2,26 @@ from __future__ import annotations
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 import logging
 import time
 
 from api.routers.predict_router import router as predict_router
 from api.routers.health_router import router as health_router
+from api.extensions.rate_limiter import limiter
 
 from domain.exceptions.unavailable_ex import ModelUnavailableException
 from domain.exceptions.internal_ex import InternalException
+
+app = FastAPI(
+    title="NER disease classification service",
+    description="API to serve and eval the BERT models",
+    version="1.0.0"
+)
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -18,12 +30,6 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger("ner-gateway")
-
-app = FastAPI(
-    title="NER disease classification service",
-    description="API to serve and eval the BERT models",
-    version="1.0.0"
-)
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):

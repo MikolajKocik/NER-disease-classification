@@ -1,14 +1,17 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 
 from domain.abstractions import Context, ModelStrategy
 from api.extensions.dependencies import get_strategy
+from api.extensions.rate_limiter import limiter
 from application.schemas.ner_request import NERRequest
 from application.schemas.ner_response import NERResponse
 
 router = APIRouter()
 
 @router.post("/predict", response_model=NERResponse)
+@limiter.limit("5/minute") 
 async def predict(
+    request: Request,
     req: NERRequest,
     strategy: ModelStrategy = Depends(get_strategy)
 ):
