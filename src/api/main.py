@@ -3,6 +3,7 @@ from __future__ import annotations
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 import logging
+import time
 
 from api.routers.predict_router import router as predict_router
 from api.routers.health_router import router as health_router
@@ -10,13 +11,32 @@ from api.routers.health_router import router as health_router
 from domain.exceptions.unavailable_ex import ModelUnavailableException
 from domain.exceptions.internal_ex import InternalException
 
-logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
+
+logger = logging.getLogger("ner-gateway")
 
 app = FastAPI(
     title="NER disease classification service",
     description="API to serve and eval the BERT models",
     version="1.0.0"
 )
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+
+    logger.info(
+        f"{request.method} {request.url.path} "
+        f"- Status: {response.status_code} "
+        f"- {process_time:.4f}s"
+    )
+    return response
 
 @app.exception_handler(ModelUnavailableException)
 async def model_unavailable_exception_handler(request: Request, exc: ModelUnavailableException):
