@@ -1,1 +1,1 @@
-from . import generated, strategies
+from . import strategies

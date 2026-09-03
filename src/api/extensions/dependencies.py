@@ -11,7 +11,6 @@ from infrastructure.strategies.cased_strategy import CasedStrategy
 from functools import lru_cache
 from fastapi import Depends
 
-HTTP = True
 IS_CASED = True
 
 @lru_cache
@@ -21,10 +20,11 @@ def get_model_config() -> ModelConfig:
 def get_ner_service(
     config: ModelConfig = Depends(get_model_config)
 ) -> NERService:
-    if HTTP:
+    if config.protocol == "http":
         return HttpService(config)
-    else:
+    if config.protocol == "grpc":
         return GRPCService(config)
+    raise ValueError(f"Unsupported model protocol: {config.protocol}")
 
 def get_strategy(
     service: NERService = Depends(get_ner_service)
