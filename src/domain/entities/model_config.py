@@ -10,10 +10,12 @@ load_dotenv()
 class ModelConfig():
     endpoint: str 
     version: str
+    protocol: str
 
     @classmethod
     def from_env(cls) -> ModelConfig:
         return cls(
-            endpoint=os.getenv("model_endpoint"),
-            version=os.getenv("model_version")
+            endpoint=os.getenv("MODEL_ENDPOINT", os.getenv("model_endpoint", "")),
+            version=os.getenv("MODEL_VERSION", os.getenv("model_version", "v1")),
+            protocol=os.getenv("MODEL_PROTOCOL", os.getenv("model_protocol", "http")).lower()
         )
