@@ -1,0 +1,38 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: src/api/Dockerfile
+    environment:
+      MODEL_ENDPOINT: ${MODEL_ENDPOINT:-http://bert-cased:8000}
+      MODEL_VERSION: ${MODEL_VERSION:-v1}
+      MODEL_PROTOCOL: ${MODEL_PROTOCOL:-http}
+    ports:
+      - "8000:8000"
+    networks:
+      - isolated
+    depends_on:
+      - bert-cased
+      - bert-uncased
+    
+  bert-uncased:
+    build: 
+      context: .
+      dockerfile: model/uncased/Dockerfile
+    ports:
+      - "8002:8000"
+    environment:
+      MODEL_PROTOCOL: ${MODEL_PROTOCOL:-http}
+    networks:
+      - isolated
+    
+  bert-cased:
+    build:
+      context: .
+      dockerfile: model/cased/Dockerfile
+    networks:
+      - isolated
+    environment:
+      MODEL_PROTOCOL: ${MODEL_PROTOCOL:-http}
+    ports:
+      - "50051:50051"
