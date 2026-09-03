@@ -19,7 +19,7 @@ class HttpService(NERService):
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 url=f"{self._config.endpoint}/{self._config.version}/predict",
-                data=req
+                json=req.model_dump()
             )
         
         response.raise_for_status()
