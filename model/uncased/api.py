@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from ner_model import BertUncased
+import os
 
 class Request(BaseModel):
     text: str
@@ -12,7 +13,9 @@ app = FastAPI(
 
 ner_model = BertUncased()
 
-@app.post("/predict")
+version = os.getenv("model_version")
+
+@app.post("/{version}/predict")
 def predict(payload: Request):
     entities = ner_model.recognize(payload.text)
     return {"entities": entities}

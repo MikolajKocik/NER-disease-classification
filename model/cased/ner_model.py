@@ -1,12 +1,15 @@
 from transformers import AutoTokenizer, AutoModelForTokenClassification, pipeline
+from pathlib import Path
+
+MODEL_PATH = Path(__file__).resolve().parents[1] / "saved" / "c-ner.model"
 
 class BertCased():
     def __init__(self):
         self.tokenizer = AutoTokenizer.from_pretrained(
-            ".saved/c-ner_model"
+            MODEL_PATH
         )
         self.model = AutoModelForTokenClassification.from_pretrained(
-            ".saved/c-ner.model",
+            MODEL_PATH,
             device_map="auto",
             attn_implementation="sdpa"
         )
@@ -23,4 +26,14 @@ class BertCased():
         with cased approach and trained knowledge
         """
         results = self.ner_pipeline(text)
-        return results
+        
+        return [
+            {
+                "text": entity["word"],
+                "label": entity["entity_group"].upper(),
+                "start": entity["start"],
+                "end": entity["end"],
+                "confidence": entity["score"],
+            }
+            for entity in results
+        ] 
