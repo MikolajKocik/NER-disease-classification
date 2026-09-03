@@ -3,6 +3,7 @@ from transformers import Trainer, TrainingArguments, DataCollatorForTokenClassif
 from datasets import load_dataset
 import numpy as np
 import evaluate
+from pathlib import Path
 
 BATCH_SIZE = 16
 
@@ -23,7 +24,9 @@ data_collator = DataCollatorForTokenClassification(tokenizer)
 model = AutoModelForTokenClassification.from_pretrained(
     "google-bert/bert-base-cased",
     attn_implementation="sdpa",
-    num_labels=len(label_list)
+    num_labels=len(label_list),
+    id2label=dict(enumerate(label_list)),
+    label2id={label: index for index, label in enumerate(label_list)},
 )
 
 def tokenize_and_align_labels(examples):
@@ -107,4 +110,9 @@ trainer = Trainer(
 
 trainer.train()
 trainer.evaluate()
-trainer.save_model('.saved/c-ner.model')
+
+save_dir = Path(__file__).resolve().parents[1] / "saved" / "c-ner.model"
+save_dir.parent.mkdir(parents=True, exist_ok=True)
+
+trainer.save_model(str(save_dir))
+tokenizer.save_pretrained(str(save_dir))
