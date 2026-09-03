@@ -6,9 +6,9 @@ run:
 
 # checks linter issues
 check:
-	mypy src/
-	ruff check src/
+	mypy src/ model/
+	ruff check src/ model/
 
 # auto-formatting
 format:
-	ruff format src/
+	ruff format src/ model/
