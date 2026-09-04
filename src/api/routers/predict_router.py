@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Request, Depends
 
-from domain.abstractions import Context, ModelStrategy
 from api.extensions.dependencies import get_strategy
 from api.extensions.rate_limiter import limiter
 from application.schemas.ner_request import NERRequest
 from application.schemas.ner_response import NERResponse
+from application.handlers.recognition_handler import RecognitionHandler
+from domain.abstractions import ModelStrategy
 
 router = APIRouter()
 
@@ -15,6 +16,5 @@ async def predict(
     req: NERRequest,
     strategy: ModelStrategy = Depends(get_strategy)
 ):
-    context = Context(strategy)
-
-    return await context.predict_disease(req)
+    handler = RecognitionHandler(strategy)
+    return await handler.handle_prediction(req)
