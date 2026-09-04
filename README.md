@@ -22,7 +22,7 @@ O, B-Disease, I-Disease, B-Chemical, I-Chemical
 Predictions:
 
 ```bash
-curl -X POST http://localhost:8000/predict \
+curl -X POST http://localhost:8000/v1/predict \
   -H "Content-Type: application/json" \
   -d '{"text":"Patient has diabetes."}'
 ```
