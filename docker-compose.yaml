@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: src/api/Dockerfile
     environment:
+      API_VERSION: ${API_VERSION:-v1}
       MODEL_ENDPOINT: ${MODEL_ENDPOINT:-http://bert-cased:8000}
       MODEL_VERSION: ${MODEL_VERSION:-v1}
       MODEL_PROTOCOL: ${MODEL_PROTOCOL:-http}

@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 import logging
+import os
 import time
 
 from api.routers.predict_router import router as predict_router
@@ -19,6 +20,8 @@ app = FastAPI(
     description="API to serve and eval the BERT models",
     version="1.0.0"
 )
+
+API_VERSION = os.getenv("API_VERSION", os.getenv("api_version", "v1"))
 
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
@@ -58,5 +61,5 @@ async def internal_server_exception_handler(request: Request, exc: InternalExcep
         content={"error": "Internal server error", "message": exc.message}
     )
 
-app.include_router(predict_router)
-app.include_router(health_router)
+app.include_router(predict_router, prefix=f"/{API_VERSION}")
+app.include_router(health_router, prefix=f"/{API_VERSION}")
