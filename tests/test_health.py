@@ -8,7 +8,7 @@ def test_health_check_returns_ok():
     Should return ok (200) if service is available
     """
     # Act
-    response = client.get("/health")
+    response = client.get("/v1/health")
     
     # Assert
     assert response.status_code == 200
