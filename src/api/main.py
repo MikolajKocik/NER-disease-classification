@@ -15,7 +15,7 @@ from domain.exceptions.unavailable_ex import ModelUnavailableException
 from domain.exceptions.internal_ex import InternalException
 
 app = FastAPI(
-    title="NER disease classification service",
+    title="Medical entity recognition service",
     description="API to serve and eval the BERT models",
     version="1.0.0"
 )

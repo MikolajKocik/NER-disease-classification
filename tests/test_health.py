@@ -14,5 +14,5 @@ def test_health_check_returns_ok():
     assert response.status_code == 200
     assert response.json() == {
         "status": "ok", 
-        "service": "ner-disease-classification-gateway"
+           "service": "medical-entity-recognition-gateway"
     }

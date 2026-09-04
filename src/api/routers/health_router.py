@@ -9,5 +9,5 @@ async def health_check():
     """
     return {
         "status": "ok", 
-        "service": "ner-disease-classification-gateway"
+        "service": "medical-entity-recognition-gateway"
     }

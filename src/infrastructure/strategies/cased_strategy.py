@@ -5,7 +5,7 @@ from application.schemas.ner_response import NERResponse
 
 class CasedStrategy(ModelStrategy):
     """
-    Strategy for cased BERT NER classification model.
+    Strategy for a cased BERT medical entity recognition model.
     Preserves text casing and delegates execution to the underlying NER service.
     """
     def __init__(self, service: NERService) -> None:

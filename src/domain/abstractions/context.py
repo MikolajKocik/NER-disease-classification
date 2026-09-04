@@ -18,6 +18,6 @@ class Context():
         
     async def predict_disease(self, req: NERRequest) -> NERResponse:
         """
-        Predict a disease by NER classification with BERT model
+        Predict medical entities using NER with a BERT model
         """
         return await self._strategy.predict(req)

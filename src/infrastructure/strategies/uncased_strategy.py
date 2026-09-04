@@ -5,7 +5,7 @@ from application.schemas.ner_response import NERResponse
 
 class UnCasedStrategy(ModelStrategy):
     """
-    Strategy for uncased BERT NER classification model.
+    Strategy for an uncased BERT medical entity recognition model.
     Converts input text to lowercase before delegating execution to the underlying NER service.
     """
     def __init__(self, service: NERService) -> None:
